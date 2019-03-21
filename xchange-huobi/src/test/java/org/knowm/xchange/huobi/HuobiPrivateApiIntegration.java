@@ -36,7 +36,6 @@ public class HuobiPrivateApiIntegration {
 	public void setup() throws IOException {
 		properties = new HuobiProperties();
 		Assume.assumeTrue("Ignore tests because credentials are missing", properties.isValid());
-
 		exchange = ExchangeFactory.INSTANCE.createExchange(HuobiExchange.class, properties.getApiKey(), properties.getSecretKey());
 	}
 
@@ -60,6 +59,23 @@ public class HuobiPrivateApiIntegration {
 		}
 	}
 
+	/**
+	 * 获取对应资产的地址
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void getDepositAddressTest() throws Exception {
+		HuobiAccountService accountService = (HuobiAccountService) exchange.getAccountService();
+		String requestDepositAddress = accountService.requestDepositAddress(Currency.ETH);
+		System.out.println(requestDepositAddress);
+	}
+
+	/**
+	 * 获取对应资产的余额
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void getBalanceTest() throws IOException {
 		AccountService accountService = exchange.getAccountService();
@@ -84,6 +100,11 @@ public class HuobiPrivateApiIntegration {
 		assertThat(orders).isNotNull();
 	}
 
+	/**
+	 * 下单（限价定单）
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void placeLimitOrderTest() throws IOException {
 		String orderId = placePendingOrder();
@@ -104,6 +125,11 @@ public class HuobiPrivateApiIntegration {
 		}
 	}
 
+	/**
+	 * 下单（市场订单）
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void placeMarketOrderTest() throws IOException {
 		TradeService tradeService = exchange.getTradeService();

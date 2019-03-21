@@ -13,6 +13,8 @@ import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.marketdata.Trades;
+import org.knowm.xchange.huobi.dto.marketdata.HuobiAsset;
+import org.knowm.xchange.huobi.service.HuobiAccountService;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 
 public class HuobiPublicApiIntegration {
@@ -88,6 +90,19 @@ public class HuobiPublicApiIntegration {
 		System.out.println(trades.toString());
 		assertThat(trades).isNotNull();
 		assertThat(trades.getTrades()).size().isGreaterThan(0);
+	}
 
+	@Test
+	public void getAssetTest() {
+		try {
+			HuobiAccountService accountService = (HuobiAccountService) exchange.getAccountService();
+			HuobiAsset[] huobiAssets = accountService.getHuobiAssets();
+			for (HuobiAsset ha : huobiAssets) {
+				System.out.println(ha.toString());
+				System.out.println(ha.getAsset());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
