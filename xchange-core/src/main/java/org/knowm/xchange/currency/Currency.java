@@ -1,5 +1,7 @@
 package org.knowm.xchange.currency;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +18,7 @@ import java.util.TreeSet;
  */
 public class Currency implements Comparable<Currency>, Serializable {
 
+  private static final long serialVersionUID = -7340731832345284129L;
   private static final Map<String, Currency> currencies = new HashMap<>();
 
   /** Global currency codes */
@@ -300,7 +303,9 @@ public class Currency implements Comparable<Currency>, Serializable {
   public static final Currency ELF = createCurrency("ELF", "aelf", null);
   public static final Currency STORJ = createCurrency("STORJ", "Storj", null);
   public static final Currency MOD = createCurrency("MOD", "Modum", null);
+
   private final String code;
+
   private final CurrencyAttributes attributes;
 
   /** Public constructor. Links to an existing currency. */
@@ -329,6 +334,7 @@ public class Currency implements Comparable<Currency>, Serializable {
   }
 
   /** Returns a Currency instance for the given currency code. */
+  @JsonCreator
   public static Currency getInstance(String currencyCode) {
 
     Currency currency = getInstanceNoCreate(currencyCode.toUpperCase());
@@ -379,6 +385,7 @@ public class Currency implements Comparable<Currency>, Serializable {
   }
 
   /** Gets the currency code originally used to acquire this object. */
+  @JsonValue
   public String getCurrencyCode() {
 
     return code;
@@ -485,6 +492,8 @@ public class Currency implements Comparable<Currency>, Serializable {
   }
 
   private static class CurrencyAttributes implements Serializable {
+
+    private static final long serialVersionUID = -5575649542242146958L;
 
     public final Set<String> codes;
     public final String isoCode;
