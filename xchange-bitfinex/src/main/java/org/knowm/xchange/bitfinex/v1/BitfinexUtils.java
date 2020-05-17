@@ -28,10 +28,7 @@ public final class BitfinexUtils {
 
     String base = adaptXchangeCurrency(currencyPair.base);
     String counter = adaptXchangeCurrency(currencyPair.counter);
-    return "t"
-        + base
-        + currencySeparator(base, counter)
-        + adaptXchangeCurrency(currencyPair.counter);
+    return base + currencySeparator(base, counter) + adaptXchangeCurrency(currencyPair.counter);
   }
 
   public static String toPairStringV1(CurrencyPair currencyPair) {
@@ -42,9 +39,7 @@ public final class BitfinexUtils {
 
     String base = StringUtils.lowerCase(adaptXchangeCurrency(currencyPair.base));
     String counter = StringUtils.lowerCase(adaptXchangeCurrency(currencyPair.counter));
-    return base
-            + currencySeparator(base, counter)
-            + adaptXchangeCurrency(currencyPair.counter);
+    return base + currencySeparator(base, counter) + adaptXchangeCurrency(currencyPair.counter);
   }
 
   /**
