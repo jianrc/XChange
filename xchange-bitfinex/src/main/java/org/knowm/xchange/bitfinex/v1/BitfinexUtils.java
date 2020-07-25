@@ -20,15 +20,22 @@ public final class BitfinexUtils {
     return xchangeSymbol.toString(); // .toLowerCase();
   }
 
+  //  public static String toPairString(CurrencyPair currencyPair) {
+  //
+  //    if (currencyPair == null) {
+  //      return null;
+  //    }
+  //
+  //    String base = adaptXchangeCurrency(currencyPair.base);
+  //    String counter = adaptXchangeCurrency(currencyPair.counter);
+  //    return "t"
+  //        + base
+  //        + currencySeparator(base, counter)
+  //        + adaptXchangeCurrency(currencyPair.counter);
+  //  }
+
   public static String toPairString(CurrencyPair currencyPair) {
-
-    if (currencyPair == null) {
-      return null;
-    }
-
-    String base = adaptXchangeCurrency(currencyPair.base);
-    String counter = adaptXchangeCurrency(currencyPair.counter);
-    return base + currencySeparator(base, counter) + adaptXchangeCurrency(currencyPair.counter);
+    return toPairStringV1(currencyPair);
   }
 
   public static String toPairStringV1(CurrencyPair currencyPair) {

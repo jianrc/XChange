@@ -1,5 +1,6 @@
 package org.knowm.xchange.hitbtc.v2;
 
+import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -8,7 +9,6 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.knowm.xchange.BaseExchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.Currency;
@@ -106,28 +106,56 @@ public class HitbtcExchange extends BaseExchange implements org.knowm.xchange.Ex
   public void remoteInit() throws IOException {
     HitbtcMarketDataServiceRaw dataService = ((HitbtcMarketDataServiceRaw) marketDataService);
     List<HitbtcSymbol> hitbtcSymbols = dataService.getHitbtcSymbols();
-    Map<Currency, CurrencyMetaData> currencies =
-        dataService.getHitbtcCurrencies().stream()
-            .collect(
-                Collectors.toMap(
-                    hitbtcCurrency -> new Currency(hitbtcCurrency.getId()),
-                    hitbtcCurrency -> new CurrencyMetaData(null, hitbtcCurrency.getPayoutFee())));
+    Map<Currency, CurrencyMetaData> currencies = Maps.newLinkedHashMap();
+    dataService.getHitbtcCurrencies().stream()
+        .forEach(
+            hitbtcCurrency -> {
+              currencies.put(
+                  new Currency(hitbtcCurrency.getId()),
+                  new CurrencyMetaData(null, hitbtcCurrency.getPayoutFee()));
+            });
+    /*
+        Map<Currency, CurrencyMetaData> currencies =
+            dataService.getHitbtcCurrencies().stream()
+                .collect(
+                    Collectors.toMap(
+                        hitbtcCurrency -> new Currency(hitbtcCurrency.getId()),
+                        hitbtcCurrency -> new CurrencyMetaData(null, hitbtcCurrency.getPayoutFee())));
+    */
+    Map<CurrencyPair, CurrencyPairMetaData> currencyPairs = Maps.newLinkedHashMap();
+    hitbtcSymbols.stream()
+        .forEach(
+            hitbtcSymbol -> {
+              currencyPairs.put(
+                  new CurrencyPair(
+                      new Currency(hitbtcSymbol.getBaseCurrency()),
+                      new Currency(hitbtcSymbol.getQuoteCurrency())),
+                  new CurrencyPairMetaData(
+                      (BigDecimal) null,
+                      hitbtcSymbol.getQuantityIncrement(),
+                      (BigDecimal) null,
+                      hitbtcSymbol.getTickSize().scale(),
+                      (FeeTier[]) null));
+            });
 
-    Map<CurrencyPair, CurrencyPairMetaData> currencyPairs =
-        hitbtcSymbols.stream()
-            .collect(
-                Collectors.toMap(
-                    hitbtcSymbol ->
-                        new CurrencyPair(
-                            new Currency(hitbtcSymbol.getBaseCurrency()),
-                            new Currency(hitbtcSymbol.getQuoteCurrency())),
-                    hitbtcSymbol ->
-                        new CurrencyPairMetaData(
-                            (BigDecimal) null,
-                            hitbtcSymbol.getQuantityIncrement(),
-                            (BigDecimal) null,
-                            hitbtcSymbol.getTickSize().scale(),
-                            (FeeTier[]) null)));
+    /*
+        Map<CurrencyPair, CurrencyPairMetaData> currencyPairs =
+            hitbtcSymbols.stream()
+                .collect(
+                    Collectors.toMap(
+                        hitbtcSymbol ->
+                            new CurrencyPair(
+                                new Currency(hitbtcSymbol.getBaseCurrency()),
+                                new Currency(hitbtcSymbol.getQuoteCurrency())),
+                        hitbtcSymbol ->
+                            new CurrencyPairMetaData(
+                                (BigDecimal) null,
+                                hitbtcSymbol.getQuantityIncrement(),
+                                (BigDecimal) null,
+                                hitbtcSymbol.getTickSize().scale(),
+                                (FeeTier[]) null)));
+    */
+
     exchangeMetaData =
         HitbtcAdapters.adaptToExchangeMetaData(hitbtcSymbols, currencies, currencyPairs);
   }
