@@ -9,7 +9,7 @@ public class WebsocketResponse {
   private List<InstanceServer> instanceServers;
 
   @Data
-  private static class InstanceServer {
+  public static class InstanceServer {
     private String endpoint;
     private boolean encrypt;
     private String protocol;
